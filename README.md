@@ -56,21 +56,6 @@ Save your script as `server_status.sh` and edit the variables:
 # Bot configuration
 TOKEN="YOUR_TOKEN_HERE"
 CHAT_ID="YOUR_CHATID_HERE"
-
-# System information
-HOSTNAME=$(hostname)
-IP=$(hostname -I | awk '{print $1}')
-UPTIME=$(uptime -p)
-LOAD=$(uptime | awk -F'load average:' '{ print $2 }')
-
-# Message
-MESSAGE="📡 *Server Status: $HOSTNAME*
-🕒 *Uptime:* $UPTIME
-💻 *IP:* $IP
-📈 *Load:* $LOAD"
-
-# Send message
-curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage"      -d "chat_id=${CHAT_ID}"      -d "parse_mode=Markdown"      -d "text=${MESSAGE}"
 ```
 
 Make it executable:
@@ -114,10 +99,20 @@ To automatically run the script at regular intervals (e.g., every 10 minutes):
 ## 🧾 Example Telegram Message
 
 ```
-📡 Server Status: vps-01
-🕒 Uptime: up 3 days, 5 hours
-💻 IP: 192.168.1.23
-📈 Load: 0.12, 0.20, 0.18
+📋 Informe Diario - Raspberry Pi
+🕒 2025-11-12 21:00:01
+
+🔥 Temperatura: 45.7°C
+
+🌐 Red: ✅ Conectado
+🔌 ZeroTier: ✅ ONLINE
+💡 taky: ✅ En ejecución 
+🧠 CPU: 43.0% 
+💾 RAM: 22.7%
+📶 Uso de red (Mbps):
+📶 eth0: ⚠️ Inactiva
+📶 wlan0: ⬇️ 0.00 Mbps | ⬆️ 0.01 Mbps
+📶 wlan1: ⬇️ 0.00 Mbps | ⬆️ 0.00 Mbps
 ```
 
 ---
