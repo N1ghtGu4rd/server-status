@@ -99,17 +99,17 @@ To automatically run the script at regular intervals (e.g., every 10 minutes):
 ## 🧾 Example Telegram Message
 
 ```
-📋 Informe Diario - Raspberry Pi
+📋 Daily Report - Raspberry Pi
 🕒 2025-11-12 21:00:01
 
-🔥 Temperatura: 45.7°C
+🔥 Temp: 45.7°C
 
-🌐 Red: ✅ Conectado
+🌐 Network: ✅ Conectado
 🔌 ZeroTier: ✅ ONLINE
-💡 taky: ✅ En ejecución 
+💡 Taky: ✅ En ejecución 
 🧠 CPU: 43.0% 
 💾 RAM: 22.7%
-📶 Uso de red (Mbps):
+📶 Network Use (Mbps):
 📶 eth0: ⚠️ Inactiva
 📶 wlan0: ⬇️ 0.00 Mbps | ⬆️ 0.01 Mbps
 📶 wlan1: ⬇️ 0.00 Mbps | ⬆️ 0.00 Mbps
