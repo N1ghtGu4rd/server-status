@@ -1,142 +1,142 @@
-# 🛰️ Notificador del estado del servidor vía Telegram (Bash)
+# 🛰️ Server Status Notifier via Telegram (Bash)
 
-Este script en **Bash** envía automáticamente el **estado de tu servidor** a un chat de **Telegram** mediante un bot.  
-Ideal para monitorear tu VPS o servidor casero sin necesidad de herramientas externas.
-
----
-
-## 🚀 Requisitos
-
-- Bash (disponible por defecto en la mayoría de sistemas Linux)
-- `curl` instalado
-- Una cuenta de Telegram
-- Un bot de Telegram configurado (ver más abajo)
+This **Bash script** automatically sends your **server status** to a **Telegram chat** using a Telegram bot.  
+Perfect for monitoring your VPS or home server easily, without any external tools.
 
 ---
 
-## 🤖 Cómo crear tu bot de Telegram
+## 🚀 Requirements
 
-1. **Abre Telegram** y busca el usuario [@BotFather](https://t.me/BotFather).  
-2. Escribe los siguientes comandos:
+- Bash (available by default on most Linux systems)
+- `curl` installed
+- A Telegram account
+- A Telegram bot (see below for setup)
+
+---
+
+## 🤖 How to Create Your Telegram Bot
+
+1. **Open Telegram** and search for [@BotFather](https://t.me/BotFather).  
+2. Send the following commands:
    ```
    /start
    /newbot
    ```
-3. Elige un nombre y un nombre de usuario (debe terminar en `_bot`).  
-4. BotFather te responderá con un **TOKEN** parecido a esto:
+3. Choose a name and username for your bot (must end with `_bot`).  
+4. BotFather will reply with a **TOKEN**, something like:
    ```
    123456789:ABCdefGhIjKlmnOpQRsTUVwxyZ
    ```
-   Guarda este token: lo necesitarás para el script.
+   Save this token — you’ll need it for the script.
 
 ---
 
-## 🧩 Cómo obtener tu Chat ID
+## 🧩 How to Get Your Chat ID
 
-1. Envía un mensaje cualquiera a tu nuevo bot.  
-2. Luego abre este enlace en tu navegador (sustituye `TOKEN` por el tuyo):
+1. Send any message to your new bot.  
+2. Then open this link in your browser (replace `TOKEN` with your actual one):
    ```
    https://api.telegram.org/botTOKEN/getUpdates
    ```
-3. En la respuesta JSON, busca algo como:
+3. In the JSON response, look for something like:
    ```json
    "chat": {"id": 987654321, "first_name": "..."}
    ```
-   Ese número (`987654321`) es tu **CHAT_ID**.
+   That number (`987654321`) is your **CHAT_ID**.
 
 ---
 
-## ⚙️ Configuración del script
+## ⚙️ Script Configuration
 
-Guarda tu script, por ejemplo como `server_status.sh`, y edita las variables:
+Save your script as `server_status.sh` and edit the variables:
 
 ```bash
 #!/bin/bash
 
-# Configuración del bot
-TOKEN="TU_TOKEN_AQUI"
-CHAT_ID="TU_CHATID_AQUI"
+# Bot configuration
+TOKEN="YOUR_TOKEN_HERE"
+CHAT_ID="YOUR_CHATID_HERE"
 
-# Información del sistema
+# System information
 HOSTNAME=$(hostname)
 IP=$(hostname -I | awk '{print $1}')
 UPTIME=$(uptime -p)
 LOAD=$(uptime | awk -F'load average:' '{ print $2 }')
 
-# Mensaje
-MESSAGE="📡 *Estado del servidor: $HOSTNAME*
+# Message
+MESSAGE="📡 *Server Status: $HOSTNAME*
 🕒 *Uptime:* $UPTIME
 💻 *IP:* $IP
-📈 *Carga:* $LOAD"
+📈 *Load:* $LOAD"
 
-# Envío del mensaje
+# Send message
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage"      -d "chat_id=${CHAT_ID}"      -d "parse_mode=Markdown"      -d "text=${MESSAGE}"
 ```
 
-Dale permisos de ejecución:
+Make it executable:
 ```bash
 chmod +x server_status.sh
 ```
 
-Y prueba ejecutarlo:
+Test it manually:
 ```bash
 ./server_status.sh
 ```
 
-Deberías recibir el mensaje en tu chat de Telegram 📩
+You should receive a Telegram message with your server status 📩
 
 ---
 
-## 🕒 Ejecución automática con `crontab`
+## 🕒 Automate with `crontab`
 
-Para que el script se ejecute automáticamente cada cierto tiempo (por ejemplo, cada 10 minutos):
+To automatically run the script at regular intervals (e.g., every 10 minutes):
 
-1. Edita el cron:
+1. Edit the cron table:
    ```bash
    crontab -e
    ```
 
-2. Añade una línea como esta (ajusta la ruta al script):
+2. Add a line like this (adjust the path to your script):
 
    ```bash
-   */10 * * * * /ruta/completa/server_status.sh >> /ruta/completa/server_status.log 2>&1
+   */10 * * * * /full/path/server_status.sh >> /full/path/server_status.log 2>&1
    ```
 
-   Esto ejecutará el script cada 10 minutos y guardará un log de salida.
+   This will run the script every 10 minutes and save logs to a file.
 
-3. Guarda y verifica con:
+3. Save and check your cron jobs:
    ```bash
    crontab -l
    ```
 
 ---
 
-## 🧾 Ejemplo de mensaje recibido
+## 🧾 Example Telegram Message
 
 ```
-📡 Estado del servidor: vps-01
+📡 Server Status: vps-01
 🕒 Uptime: up 3 days, 5 hours
 💻 IP: 192.168.1.23
-📈 Carga: 0.12, 0.20, 0.18
+📈 Load: 0.12, 0.20, 0.18
 ```
 
 ---
 
-## 🧠 Consejos
+## 🧠 Tips
 
-- Puedes personalizar el mensaje añadiendo más información del sistema, como memoria o espacio en disco:
+- You can extend the message with additional system info like memory or disk usage:
   ```bash
   MEM=$(free -h | awk '/Mem:/ {print $3 "/" $2}')
   DISK=$(df -h / | awk 'NR==2 {print $3 "/" $2}')
   ```
-- Luego añádelo al mensaje:
+- Then append it to the message:
   ```bash
-  MESSAGE+="\n💾 *Memoria:* $MEM\n🗄️ *Disco:* $DISK"
+  MESSAGE+="\n💾 *Memory:* $MEM\n🗄️ *Disk:* $DISK"
   ```
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
-Proyecto distribuido bajo la licencia MIT.  
-Si lo mejoras o adaptas, ¡no dudes en compartirlo! 😄
+This project is licensed under the MIT License.  
+If you modify or improve it, feel free to share! 😄
